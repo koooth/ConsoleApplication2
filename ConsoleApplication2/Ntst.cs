@@ -29,6 +29,7 @@ namespace ConsoleApplication2
             System.Diagnostics.Debug.WriteLine("----------------------2");
             Assert.AreEqual("0 results", result0.Text);
             System.Diagnostics.Debug.WriteLine("!!!!!!!!!!!!!!!!!!!" + result0.Text);
+            System.Diagnostics.Debug.WriteLine("2nd" + result0.Text);
         }
 
         [TearDown]
