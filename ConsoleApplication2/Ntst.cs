@@ -6,6 +6,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using NUnit.Framework;
+using System.Diagnostics;
 
 namespace ConsoleApplication2
 {
@@ -30,6 +31,7 @@ namespace ConsoleApplication2
             Assert.AreEqual("0 results", result0.Text);
             System.Diagnostics.Debug.WriteLine("!!!!!!!!!!!!!!!!!!!" + result0.Text);
             System.Diagnostics.Debug.WriteLine("2nd" + result0.Text);
+            System.Diagnostics.Debug.WriteLine("3rd" + result0.Text);
         }
 
         [TearDown]
