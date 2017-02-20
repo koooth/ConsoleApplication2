@@ -1,25 +1,44 @@
 ﻿using System;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Chrome;
 using NUnit.Framework;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
 using OpenQA.Selenium.Support.UI;
+using NLog;
 //using Excel = Microsoft.Office.Interop.Excel;
 
+//[assembly: Parallelizable(ParallelScope.Fixtures)]
 
 namespace ConsoleApplication2
 {
+    public static class WebDriverExtensions
+    {
+        public static IWebElement FindElement(this IWebDriver driver, By by, int timeoutInSeconds)
+        {
+            if (timeoutInSeconds > 0)
+            {
+                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
+                return wait.Until(drv => drv.FindElement(by));
+            }
+            return driver.FindElement(by);
+        }
+    }
+
+    [TestFixture]
     class Ntst
    {
+        public static Logger logger = LogManager.GetCurrentClassLogger();
+
         public static List<TestCaseData> TS
         {
             get
             {
                 var testCases = new List<TestCaseData>();
 
-                using (var fs = File.OpenRead(@"C:\tst.csv"))
+                using (var fs = File.OpenRead(@"C:\test.csv"))
                 using (var sr = new StreamReader(fs))
                 {
                     string line = string.Empty;
@@ -48,56 +67,20 @@ namespace ConsoleApplication2
         [SetUp]
         public void Init()
         {
-            driver = new FirefoxDriver();
+            driver = new ChromeDriver();
+            //driver = new FirefoxDriver();
         }
-
-        //[Test]
-        //public void JBJS([Values("prsgo", "jbjsoa", "plasreconsurg")] string journal)
-        //{
-        //    driver.Url = "http://journals.lww.com/" + journal + "/pages/results.aspx?txtkeywords=ggg";
-        //    //Debug.WriteLine("--------------------1");
-        //    driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(50));
-        //    IWebElement result0 = driver.FindElement(By.CssSelector(".resultCount"));
-        //    //Debug.WriteLine("----------------------2");
-        //    Assert.AreEqual("0 results", result0.Text);
-        //    //Debug.WriteLine("!!!!!!!!!!!!!!!!!!!" + result0.Text);
-        //    //Debug.WriteLine("2nd" + result0.Text);
-        //    //Debug.WriteLine("3rd" + result0.Text);
-        //    Trace.WriteLine(journal + " - " + result0.Text);
-        //    TestContext.WriteLine(journal + " - " + result0.Text);
-        //}
 
         [TestCaseSource("TS")]
         public void nullsearch(string jrn)
         {
-            driver.Url = "http://journals.lww.com/" + jrn + "/pages/results.aspx?txtkeywords=gggasdqwe";
-            //Debug.WriteLine("--------------------1");
-            driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(50));
-            IWebElement result0 = driver.FindElement(By.CssSelector(".resultCount"));
-            IWebElement copyright = driver.FindElement(By.CssSelector(".copy"));
-            //IWebElement result0 = new WebDriverWait(driver, TimeSpan.FromSeconds(20)).Until(ExpectedConditions.((By.CssSelector(".resultCount"))));
-            //IWebElement copyright = new WebDriverWait(driver, TimeSpan.FromSeconds(20)).Until(ExpectedConditions.((By.CssSelector(".copy")));
-            //Debug.WriteLine("----------------------2");
-            Assert.AreEqual("0 results", result0.Text + " - " + copyright.Text);
-            //Debug.WriteLine("!!!!!!!!!!!!!!!!!!!" + result0.Text);
-            //Debug.WriteLine("2nd" + result0.Text);
-            Debug.WriteLine(jrn + " - " + result0.Text + " - " + copyright.Text);
-            Trace.WriteLine(jrn + " - " + result0.Text + " - " + copyright.Text);
-            TestContext.WriteLine(jrn + " - " + result0.Text + " - " + copyright.Text);
+            driver.Navigate().GoToUrl("http://journals.lww.com/" + jrn + "/pages/results.aspx?txtkeywords=gggasdqwe");
+            IWebElement result0 = driver.FindElement(By.CssSelector(".resultCount"), 30);
+            IWebElement copyright = driver.FindElement(By.CssSelector(".copy"), 30);
+            Assert.AreEqual("0 results", result0.Text);
+            logger.Info(jrn + " - " + result0.Text + " - " + copyright.Text);
+ 
         }
-
-        //public static class WebDriverExtensions
-        //{
-        //    public static IWebElement FindElement(this IWebDriver driver, By by, int timeoutInSeconds)
-        //    {
-        //        if (timeoutInSeconds > 0)
-        //        {
-        //            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
-        //            return wait.Until(drv => drv.FindElement(by));
-        //        }
-        //        return driver.FindElement(by);
-        //    }
-        //}
 
         //[TestCaseSource("TS")]
         //public void copyright(string jrn)
