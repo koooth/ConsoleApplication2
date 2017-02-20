@@ -38,7 +38,7 @@ namespace ConsoleApplication2
             {
                 var testCases = new List<TestCaseData>();
 
-                using (var fs = File.OpenRead(@"C:\test.csv"))
+                using (var fs = File.OpenRead(@"C:\tst.csv"))
                 using (var sr = new StreamReader(fs))
                 {
                     string line = string.Empty;
@@ -64,9 +64,10 @@ namespace ConsoleApplication2
 
         IWebDriver driver;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Init()
         {
+
             driver = new ChromeDriver();
             //driver = new FirefoxDriver();
         }
@@ -78,8 +79,10 @@ namespace ConsoleApplication2
             IWebElement result0 = driver.FindElement(By.CssSelector(".resultCount"), 30);
             IWebElement copyright = driver.FindElement(By.CssSelector(".copy"), 30);
             Assert.AreEqual("0 results", result0.Text);
-            logger.Info(jrn + " - " + result0.Text + " - " + copyright.Text);
- 
+            logger.Info(jrn);
+            logger.Info("-------------------------" + result0.Text);
+            logger.Info("-----------------------------------" + copyright.Text);
+
         }
 
         //[TestCaseSource("TS")]
@@ -95,7 +98,7 @@ namespace ConsoleApplication2
         //    Debug.WriteLine(jrn + " - " + copyright.Text);
         //}
 
-        [TearDown]
+        [OneTimeTearDown]
         public void Clear()
         {
             driver.Close();
