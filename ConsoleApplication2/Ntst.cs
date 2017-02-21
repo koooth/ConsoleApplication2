@@ -72,7 +72,9 @@ namespace ConsoleApplication2
         [OneTimeSetUp]
         public void Init()
         {
-
+            logger.Info("|----------------------------------------------------------------------------------|");
+            logger.Info("|-----------------------------------Test started-----------------------------------|");
+            logger.Info("|----------------------------------------------------------------------------------|");
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
             //driver = new FirefoxDriver();
@@ -83,9 +85,9 @@ namespace ConsoleApplication2
         {
             //try
             //{
-                driver.Navigate().GoToUrl("http://journals.lww.com/" + jrn + "/pages/results.aspx?txtkeywords=gggasdqwe");
-                IWebElement result0 = driver.FindElement(By.CssSelector(".resultCount"), 30);
-                IWebElement copyright = driver.FindElement(By.CssSelector(".copy"), 30);
+                driver.Navigate().GoToUrl("http://stage-journals.lww.com/" + jrn + "/pages/results.aspx?txtkeywords=gggasdqwe");
+                IWebElement result0 = driver.FindElement(By.CssSelector(".resultCount"), 15);
+                IWebElement copyright = driver.FindElement(By.CssSelector(".copy"), 15);
                 Assert.AreEqual("0 results", result0.Text);
                 logger.Info(jrn);
                 logger.Info("-------------------------" + result0.Text);
@@ -128,6 +130,9 @@ namespace ConsoleApplication2
         public void Clear()
         {
             driver.Close();
+            logger.Info("|----------------------------------------------------------------------------------|");
+            logger.Info("|-----------------------------------Test finished----------------------------------|");
+            logger.Info("|----------------------------------------------------------------------------------|");
         }
     }
 }
