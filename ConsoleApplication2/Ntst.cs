@@ -85,6 +85,7 @@ namespace ConsoleApplication2
         {
             //try
             //{
+   
                 driver.Navigate().GoToUrl("http://stage-journals.lww.com/" + jrn + "/pages/results.aspx?txtkeywords=gggasdqwe");
                 IWebElement result0 = driver.FindElement(By.CssSelector(".resultCount"), 15);
                 IWebElement copyright = driver.FindElement(By.CssSelector(".copy"), 15);
@@ -116,7 +117,8 @@ namespace ConsoleApplication2
         {
             if (TestContext.CurrentContext.Result.Outcome != ResultState.Success)
             {
-                var screenshot = ((ITakesScreenshot)driver).GetScreenshot();
+                logger.Info("Test failed" + TestContext.CurrentContext.Test.Name);
+         var screenshot = ((ITakesScreenshot)driver).GetScreenshot();
                 string filename = "C:\\scr\\" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + ".png";
                 string now = DateTime.Now.ToString("ddMMyyy_hhmmss");
                 string FileN = now + ".jpg";
