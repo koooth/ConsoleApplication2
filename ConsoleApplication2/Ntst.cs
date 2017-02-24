@@ -108,16 +108,26 @@ namespace ConsoleApplication2
             //IWebElement code = driver.FindElement(By.TagName("body"), 30);
             //Assert.IsTrue(code.Text.Contains("&#x"));
             //Assert.IsTrue(code.Text.Contains("&#x201D;"));
-            driver.Navigate().GoToUrl("http://journals.lww.com/plasreconsurg/toc/2017/01000/"); ///Pages/currenttoc.aspx
+            driver.Navigate().GoToUrl("http://journals.lww.com/plasreconsurg/pages/login.aspx?ContextUrl=%2fplasreconsurg%2fPages%2fcurrenttoc.aspx");
+            var login = driver.FindElement(By.CssSelector("[placeholder='Username or Email'][class='form-control js-submit']"));
+            login.SendKeys("koooth");
+            var pass = driver.FindElement(By.CssSelector("[placeholder='Password'][class='form-control js-submit']"));
+            pass.SendKeys("loading!1");
+            var submit = driver.FindElement(By.CssSelector("[class='btn btn-default btn-login js-login-button']"));
+            submit.Click();
             IWebElement list = driver.FindElement(By.CssSelector(".article-list"), 30);
             elements = list.FindElements(By.TagName("article"));
             int count = elements.Count;
             logger.Info("articles on page = " + count);
+            var firstarticle = driver.FindElement(By.CssSelector("a[href*='.1.aspx']"));
+            logger.Info("first article link = " + firstarticle.Text);
+            logger.Info("first article link = " + firstarticle.GetAttribute("href"));
+            firstarticle.Click();
             for (int i = 1; i <= count; i = i + 1)
             {
                 driver.Navigate().GoToUrl("http://journals.lww.com/plasreconsurg/FullText/2017/01000/Why_Some_Mastectomy_Patients_Opt_to_Undergo." + i +".aspx");
                 IWebElement code = driver.FindElement(By.TagName("body"), 30);
-                Assert.IsFalse(code.Text.Contains("&amp;#x"));
+                Assert.IsFalse(code.Text.Contains("#x"));
                 logger.Info(i + "st article verified");
             }
             logger.Info(count + " totally articles verified");
