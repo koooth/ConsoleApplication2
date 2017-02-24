@@ -64,10 +64,10 @@ namespace ConsoleApplication2
                 return testCases;
             }
         }
-
+        
         IWebDriver driver;
 
-        //public TestContext TestContext { get; set; }
+        public static IList<IWebElement> elements;
 
         [OneTimeSetUp]
         public void Init()
@@ -98,6 +98,29 @@ namespace ConsoleApplication2
             //{
             //    logger.Info("!!!!!Test Failed!!!!! - " + jrn);
             //}
+        }
+
+        [Test]
+        public void UnExpectedElement()
+        {
+            //driver.Navigate().GoToUrl("http://journals.lww.com/plasreconsurg/Fulltext/2017/01000/Late_Surgical_Site_Infection_in_Immediate.5.aspx");
+            //System.Threading.Thread.Sleep(10000);
+            //IWebElement code = driver.FindElement(By.TagName("body"), 30);
+            //Assert.IsTrue(code.Text.Contains("&#x"));
+            //Assert.IsTrue(code.Text.Contains("&#x201D;"));
+            driver.Navigate().GoToUrl("http://journals.lww.com/plasreconsurg/toc/2017/01000/"); ///Pages/currenttoc.aspx
+            IWebElement list = driver.FindElement(By.CssSelector(".article-list"), 30);
+            elements = list.FindElements(By.TagName("article"));
+            int count = elements.Count;
+            logger.Info("articles on page = " + count);
+            for (int i = 1; i <= count; i = i + 1)
+            {
+                driver.Navigate().GoToUrl("http://journals.lww.com/plasreconsurg/FullText/2017/01000/Why_Some_Mastectomy_Patients_Opt_to_Undergo." + i +".aspx");
+                IWebElement code = driver.FindElement(By.TagName("body"), 30);
+                Assert.IsFalse(code.Text.Contains("&amp;#x"));
+                logger.Info(i + "st article verified");
+            }
+            logger.Info(count + " totally articles verified");
         }
 
         //[TestCaseSource("TS")]
